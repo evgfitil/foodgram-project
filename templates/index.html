@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Рецепты{% endblock %}
+{% block content %}
+  {% load static recipes_extras user_filters %}
+  {% include 'nav.html' with index=True %}
+  <link rel="stylesheet" href="{% static 'pages/index.css' %}">
+  <div class="main__header">
+    <h1 class="main__title">Рецепты</h1>
+      <ul class="tags">
+          {% with filter_values=request.GET|get_filter_values %}
+            {% for tag in all_tags %}
+              <li class="tags__item">
+              <a
+                  id="{{ tag.slug }}"
+                  class="tags__checkbox tags__checkbox_style_{{ tag.checkbox_style }}
+                  {% if tag.slug in filter_values %}tags__checkbox_active{% endif %}"
+                  href="/?{{ request|get_filter_link:tag }}"
+                  ></a>
+              <span class="tags__label">{{ tag.name }}</span>
+          </li>
+          {% endfor %}
+        {% endwith %}
+      </ul>
+  </div>
+    <div class="card-list">
+        {% for recipe in object_list %}
+        <div class="card" data-id={{ recipe.id }}>
+            <a href="/recipe/{{ recipe.pk }}" class="link" target="_self"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
+            <div class="card__body">
+                <a class="card__title link" href="/recipe/{{ recipe.pk }}" target="_self">{{ recipe.name }}</a>
+                <ul class="card__items">
+                    {% include 'tags.html' %}
+                </ul>
+                <div class="card__items card__items_column">
+                    <p class="card__text"><span class="icon-time"></span>{{ recipe.prep_time }} мин.</p>
+                    <p class="card__text"><span class="icon-user"></span> <a
+                            href="/author/{{ recipe.author.id }}" style="color: black">{{ recipe.author.get_full_name }}</a></p>
+                </div>
+            </div>
+            {% csrf_token %}
+            {% if request.user.is_authenticated %}
+              <div class="card__footer">
+                {% if recipe|shopping_recipe:request.user %}
+                  <button class="button button_style_light-blue" name="purchases"><span
+                          class="icon-check button__icon"></span>Рецепт добавлен</button>
+                {% else %}
+                  <button class="button button_style_blue" name="purchases" data-out><span
+                          class="icon-plus button__icon"></span>Добавить в покупки</button>
+                {% endif %}
+                {% if recipe.id in user_favorites %}
+                  <button class="button button_style_none" name="favorites" ><span class="icon-favorite icon-favorite_big icon-favorite_active"></span></button>
+                  <div class="single-card__favorite-tooltip tooltip"></div>
+                {% else %}
+                  <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
+                  <div class="single-card__favorite-tooltip tooltip"></div>
+                {% endif %}
+              </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% if is_paginated %}
+    <nav class="pagination" aria-label="Search results pages">
+      <ul class="pagination__container">
+      {% if page_obj.has_previous %}
+        <li class="pagination__item"><a class="pagination__link link" href="?{% url_replace page=page_obj.previous_page_number %}">
+          <span class="icon-left"></span></a>
+        </li>
+      {% else %}
+        <li class="disabled"></li>
+      {% endif %}
+        {% for p in page_obj.paginator.page_range %}
+          {% if page_obj.number == p %}
+            <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="?{% url_replace page=p %}">{{ p }}</a></li>
+          {% else %}
+            <li class="pagination__item"><a class="pagination__link link" href="?{% url_replace page=p %}">{{ p }}</a></li>
+          {% endif %}
+        {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="pagination__item"><a class="pagination__link link" href="?{% url_replace page=page_obj.next_page_number %}">
+              <span class="icon-right"></span></a></li>
+          {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+      <script src="{% static 'js/config/config.js' %}"></script>
+      <script src="{% static 'js/components/MainCards.js' %}"></script>
+      <script src="{% static 'js/components/Favorites.js' %}"></script>
+      <script src="{% static 'js/components/CardList.js' %}"></script>
+      <script src="{% static 'js/components/Header.js' %}"></script>
+      <script src="{% static 'js/components/Purchases.js' %}"></script>
+      <script src="{% static 'js/api/Api.js' %}"></script>
+      <script src="{% static 'indexAuth.js' %}"></script>
+      <script src="{% static 'js/components/Subscribe.js' %}"></script>
+{% endblock %}
