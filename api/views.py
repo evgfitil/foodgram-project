@@ -13,27 +13,27 @@ class FavoriteView(View):
 
     def post(self, request):
         recipe_id = json.loads(request.body).get('id')
-        recipe = Recipe.objects.get(id=recipe_id)
+        recipe = get_object_or_404(Recipe, id=recipe_id)
 
         if recipe_id is None or recipe is None:
 
-            return JsonResponse({'success': 'false'})
+            return JsonResponse({'success': False})
 
-        if Favorite.objects.filter(user=request.user, recipe=recipe).count() != 0:
+        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
 
-            return JsonResponse({'success': 'false'})
+            return JsonResponse({'success': False})
 
-        Favorite.objects.create(user=request.user, recipe=recipe)
+        Favorite.objects.get_or_create(user=request.user, recipe=recipe)
 
-        return JsonResponse({'success': 'true'})
+        return JsonResponse({'success': True})
 
     def delete(self, request, recipe_id):
         recipe = get_object_or_404(Recipe, id=recipe_id)
         removed = Favorite.objects.filter(user=request.user, recipe=recipe).delete()
         if removed:
-            return JsonResponse({'success': 'true'})
+            return JsonResponse({'success': True})
 
-        return JsonResponse({'success': 'true'})
+        return JsonResponse({'success': False})
 
 
 class SubscribeView(View):
@@ -44,18 +44,18 @@ class SubscribeView(View):
 
         if request.user == author or Follow.objects.filter(
                 user=request.user, author=author).exists():
-            return JsonResponse({'success': 'false'})
+            return JsonResponse({'success': False})
 
         Follow.objects.create(user=request.user, author=author)
-        return JsonResponse({'success': 'true'})
+        return JsonResponse({'success': True})
 
     def delete(self, request, author_id):
         author = get_object_or_404(User, id=author_id)
         removed = Follow.objects.filter(user=request.user, author=author).delete()
-
         if removed:
-            return JsonResponse({'success': 'true'})
-        return JsonResponse({'success': 'false'})
+            return JsonResponse({'success': True})
+
+        return JsonResponse({'success': False})
 
 
 class GetIngredientsView(View):
@@ -76,7 +76,7 @@ class PurchasesView(View):
 
         ShopList.objects.get_or_create(user=request.user, recipe=recipe)
 
-        return JsonResponse({'success': 'true'})
+        return JsonResponse({'success': True})
 
     def delete(self, request, recipe_id):
         count, _ = ShopList.objects.filter(
@@ -84,5 +84,4 @@ class PurchasesView(View):
             recipe=recipe_id,
         ).delete()
 
-        return JsonResponse({'success': 'true' if count > 0 else 'false'})
-
+        return JsonResponse({'success': True if count else False})
