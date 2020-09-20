@@ -9,13 +9,11 @@
       <div class="main__header">
         <h1 class="main__title">Мои подписки</h1>
       </div>
-
-      <div class="card-list">
+    <div class="card-list">
       {% for author, recipes in fav_recipes.items %}
         <div class="card-user" data-author="{{ author.id }}">
         <div class="card-user__header">
           <h2 class="card-user__title">{{ author.get_full_name }}</h2>
-        </div>
         </div>
         {% for recipe in recipes %}
           <div class="card-user__body">
@@ -29,13 +27,15 @@
               </li>
             </ul>
           </div>
-      {% endfor %}
+            {% endfor %}
         <div class="card-user__footer">
           <button class="button button_style_light-blue button_size_auto"
                   name="subscribe" onclick="location.reload()">Отписаться</button>
         </div>
-        </div>
-      {% endfor %}
+    </div>
+    {% endfor %}
+    </div>
+    </main>
 
   <script src="{% static 'js/components/MainCards.js' %}"></script>
   <script src="{% static 'js/components/MyFollow.js' %}"></script>
@@ -44,5 +44,4 @@
   <script src="{% static 'js/components/Header.js' %}"></script>
   <script src="{% static 'js/api/Api.js' %}"></script>
   <script src="{% static 'myFollow.js' %}"></script>
-  </main>
 {% endblock %}
