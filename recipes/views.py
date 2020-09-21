@@ -94,6 +94,15 @@ class RecipeCreateFormView(LoginRequiredMixin, CreateView):
         instance = form.save(commit=False)
         instance.author = self.request.user
         form_data = form.data
+        ingredients = [
+            key for key in form_data if key.startswith('nameIngredient_')
+        ]
+        if not ingredients:
+            form.add_error(
+                'description',
+                'Необходимо указать хотя бы один ингредиент для создания рецепта'
+            )
+            return self.form_invalid(form)
         instance.save()
         create_ingredients_amounts(instance, form_data)
         form.save_m2m()
@@ -117,6 +126,15 @@ class RecipeEditFormView(LoginRequiredMixin, UpdateView):
         instance = form.save(commit=False)
         form_data = form.data
         instance.amount_set.all().delete()
+        ingredients = [
+            key for key in form_data if key.startswith('nameIngredient_')
+        ]
+        if not ingredients:
+            form.add_error(
+                'description',
+                'Необходимо указать хотя бы один ингредиент для создания рецепта'
+            )
+            return self.form_invalid(form)
         instance.save()
         create_ingredients_amounts(instance, form_data)
         form.save_m2m()
