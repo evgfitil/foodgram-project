@@ -88,7 +88,7 @@ class RecipeCreateFormView(LoginRequiredMixin, CreateView):
 
     form_class = RecipeForm
     template_name = 'formrecipe.html'
-    success_url = '/'
+    success_url = 'index'
 
     def form_valid(self, form):
         instance = form.save(commit=False)
