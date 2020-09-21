@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (
     AuthorRecipeListView, FavoriteListView, MyFollowListView,
-    RecipeCreateFormView,RecipeEditFormView, RecipeDetailView,
+    RecipeCreateFormView, RecipeEditFormView, RecipeDetailView,
     RecipeDelete, RecipeIndexListView, ShopingList, shoplist_download
 )
 
