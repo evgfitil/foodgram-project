@@ -28,7 +28,7 @@
             <div class="card__footer">
                 <button class="button button_style_light-blue" name="purchases" data-out><span
                         class="icon-plus button__icon"></span>Добавить в покупки</button>
-                {% if recipe.id in user_favorites %}
+                {% if recipe|is_favorite:user %}
                         <button class="button button_style_none" name="favorites" onclick="location.reload()"><span
                                 class="icon-favorite icon-favorite_big icon-favorite_active"></span></button>
                         <div class="single-card__favorite-tooltip tooltip"></div>

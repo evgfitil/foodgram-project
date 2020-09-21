@@ -1,6 +1,6 @@
 from django import template
 
-from api.models import Follow
+from api.models import Follow, Favorite
 from recipes.models import ShopList
 
 register = template.Library()
@@ -45,3 +45,8 @@ def shopping_recipe(recipe, user):
 @register.filter(name='is_following')
 def is_following(author, user):
     return Follow.objects.filter(user=user, author=author).exists()
+
+
+@register.filter(name='is_favorite')
+def is_favorite(recipe, user):
+    return Favorite.objects.filter(user=user, recipe=recipe).exists()

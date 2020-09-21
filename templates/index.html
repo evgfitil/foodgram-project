@@ -33,7 +33,7 @@
                   <button class="button button_style_blue" name="purchases" data-out><span
                           class="icon-plus button__icon"></span>Добавить в покупки</button>
                 {% endif %}
-                {% if recipe.id in user_favorites %}
+                {% if recipe|is_favorite:user %}
                   <button class="button button_style_none" name="favorites" ><span class="icon-favorite icon-favorite_big icon-favorite_active"></span></button>
                   <div class="single-card__favorite-tooltip tooltip"></div>
                 {% else %}
