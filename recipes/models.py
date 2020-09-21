@@ -21,6 +21,10 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
+
+    class Meta:
+        ordering = ['-pub_date']
+
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='recipes'
     )
