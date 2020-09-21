@@ -4,7 +4,7 @@ from users.models import User
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
     unit = models.CharField(max_length=15)
 
     def __str__(self):
@@ -28,7 +28,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='recipes'
     )
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
     pub_date = models.DateTimeField("Дата добавления", auto_now_add=True)
     image = models.ImageField(upload_to='recipes/')
     description = models.TextField(max_length=1200)
@@ -36,7 +36,7 @@ class Recipe(models.Model):
         Ingredient, through='Amount', through_fields=('recipe', 'ingredient')
     )
     tag = models.ManyToManyField(Tag, related_name='tag')
-    prep_time = models.DurationField()
+    prep_time = models.IntegerField()
 
     def __str__(self):
         return self.name

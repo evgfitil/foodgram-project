@@ -48,14 +48,12 @@
                         name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button>
               </li>
               {% endif %}
-              {% if request.user != recipe.author %}
-              {% if recipe.author|is_following:request.user %}
+              {% if recipe.author|is_following:request.user and request.user != recipe.author %}
                 <li class="single-card__item"><button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться от автора</button></li>
               {% else %}
                 <li class="single-card__item"><button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button></li>
               {% endif %}
             </ul>
-            {% endif %}
             {% endif %}
               <div class="single-card__section">
                 <h3 class="single-card__section-title">Ингридиенты:</h3>
