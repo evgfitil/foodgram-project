@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from .models import Amount, Ingredient, Tag
 
 
@@ -13,7 +15,7 @@ def create_ingredients_amounts(instance, form_data):
     ]
     ingredients_amounts = [
         Amount(
-            ingredient=Ingredient.objects.get(name=ingredient),
+            ingredient = get_object_or_404(Ingredient, name=ingredient),
             units=int(unit),
             recipe=instance
         )
