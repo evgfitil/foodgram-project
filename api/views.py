@@ -29,7 +29,9 @@ class FavoriteView(View):
 
     def delete(self, request, recipe_id):
         recipe = get_object_or_404(Recipe, id=recipe_id)
-        removed = Favorite.objects.filter(user=request.user, recipe=recipe).delete()
+        removed = Favorite.objects.filter(
+            user=request.user, recipe=recipe
+        ).delete()
         if removed:
             return JsonResponse({'success': True})
 
@@ -51,7 +53,9 @@ class SubscribeView(View):
 
     def delete(self, request, author_id):
         author = get_object_or_404(User, id=author_id)
-        removed = Follow.objects.filter(user=request.user, author=author).delete()
+        removed = Follow.objects.filter(
+            user=request.user, author=author
+        ).delete()
         if removed:
             return JsonResponse({'success': True})
 

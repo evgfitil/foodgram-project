@@ -1,6 +1,8 @@
 from django.urls import path
 
-from .views import FavoriteView, GetIngredientsView, PurchasesView, SubscribeView
+from .views import (
+    FavoriteView, GetIngredientsView, PurchasesView, SubscribeView
+)
 
 
 urlpatterns = [
