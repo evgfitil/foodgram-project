@@ -14,18 +14,13 @@ class FavoriteView(View):
     def post(self, request):
         recipe_id = json.loads(request.body).get('id')
         recipe = get_object_or_404(Recipe, id=recipe_id)
+        favorite, created = Favorite.objects.get_or_create(
+            user=request.user, recipe=recipe
+        )
+        if created:
+            return JsonResponse({'success': True})
 
-        if recipe_id is None or recipe is None:
-
-            return JsonResponse({'success': False})
-
-        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
-
-            return JsonResponse({'success': False})
-
-        Favorite.objects.get_or_create(user=request.user, recipe=recipe)
-
-        return JsonResponse({'success': True})
+        return JsonResponse({'success': False})
 
     def delete(self, request, recipe_id):
         recipe = get_object_or_404(Recipe, id=recipe_id)
@@ -48,8 +43,13 @@ class SubscribeView(View):
                 user=request.user, author=author).exists():
             return JsonResponse({'success': False})
 
-        Follow.objects.create(user=request.user, author=author)
-        return JsonResponse({'success': True})
+        follow, created = Follow.objects.get_or_create(
+            user=request.user, author=author
+        )
+        if created:
+            return JsonResponse({'success': True})
+
+        return JsonResponse({'success': False})
 
     def delete(self, request, author_id):
         author = get_object_or_404(User, id=author_id)
