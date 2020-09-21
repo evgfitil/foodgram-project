@@ -14,9 +14,6 @@ RUN apk update \
     && pip install Pillow \
     && apk del build-deps
 
-#RUN apk update \
-#    && apk add postgresql-dev gcc python3-dev musl-dev
-
 RUN pip install --upgrade pip
 COPY . /usr/src/app/
 COPY ./requirements.txt .
