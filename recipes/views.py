@@ -4,9 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F, Sum
 from django.http import Http404, HttpResponse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, View
-from django.shortcuts import redirect, reverse, render
-
-from api.models import Follow
+from django.shortcuts import get_object_or_404, redirect, reverse
 
 from .extras import create_ingredients_amounts, get_all_tags, get_filters
 from .forms import RecipeForm
@@ -24,18 +22,9 @@ class RecipeIndexListView(ListView):
 
         return get_filters(self.request, qs)
 
-    def get_user_favorites(self):
-        user = self.request.user
-        return Recipe.objects.filter(favrecipe__user=user).values_list(
-            'id', flat=True
-        )
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({'all_tags': get_all_tags()})
-
-        if self.request.user.is_authenticated:
-            context.update({'user_favorites': self.get_user_favorites()})
 
         return context
 
@@ -45,41 +34,22 @@ class RecipeDetailView(DetailView):
     model = Recipe
     template_name = 'recipe.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            fav_recipes = Recipe.objects.filter(
-                favrecipe__user=self.request.user
-            ).values_list(
-                'id', flat=True
-            )
-            if self.object.id in fav_recipes:
-                context.update({'is_favorite': True})
-        return context
-
 
 class AuthorRecipeListView(RecipeIndexListView):
 
     template_name = 'author.html'
 
     def get_queryset(self):
-        cur_user = User.objects.get(id=self.kwargs['pk'])
-        qs = Recipe.objects.filter(author=cur_user)
+        current_user = get_object_or_404(User, pk=self.kwargs.get('pk'))
+        qs = Recipe.objects.filter(author=current_user)
 
         return get_filters(self.request, qs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        author = User.objects.get(id=self.kwargs['pk'])
+        author = get_object_or_404(User, pk=self.kwargs.get('pk'))
         context['author'] = author
-        if self.request.user.is_authenticated:
-            fav_authors = Follow.objects.filter(
-                user=self.request.user
-            ).values_list(
-                'id', flat=True
-            )
-            if author.id in fav_authors:
-                context.update({'is_following': True})
+
         return context
 
 
@@ -101,8 +71,8 @@ class MyFollowListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cur_user = self.request.user
-        authors = User.objects.filter(following__user=cur_user)
+        current_user = self.request.user
+        authors = User.objects.filter(following__user=current_user)
         context['authors'] = authors
         fav_recipes = {}
         for author in authors:
@@ -142,7 +112,6 @@ class RecipeEditFormView(LoginRequiredMixin, UpdateView):
     form_class = RecipeForm
     model = Recipe
     template_name = 'formrecipe.html'
-    template_name_field = 'instance'
 
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -174,7 +143,7 @@ class RecipeEditFormView(LoginRequiredMixin, UpdateView):
 class RecipeDelete(LoginRequiredMixin, DeleteView):
 
     model = Recipe
-    success_url = '/'
+    success_url = 'index'
 
     def get(self, *args, **kwargs):
         return self.post(*args, **kwargs)
