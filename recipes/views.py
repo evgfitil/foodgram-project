@@ -3,7 +3,9 @@ import csv
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F, Sum
 from django.http import Http404, HttpResponse
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, View
+from django.views.generic import (
+    CreateView, ListView, DetailView, UpdateView, DeleteView
+)
 from django.shortcuts import get_object_or_404, redirect, reverse
 
 from .extras import create_ingredients_amounts, get_all_tags, get_filters
@@ -100,7 +102,7 @@ class RecipeCreateFormView(LoginRequiredMixin, CreateView):
         if not ingredients:
             form.add_error(
                 'description',
-                'Необходимо указать хотя бы один ингредиент для создания рецепта'
+                'Необходимо указать хотя бы один ингредиент для рецепта'
             )
             return self.form_invalid(form)
         instance.save()
@@ -132,7 +134,7 @@ class RecipeEditFormView(LoginRequiredMixin, UpdateView):
         if not ingredients:
             form.add_error(
                 'description',
-                'Необходимо указать хотя бы один ингредиент для создания рецепта'
+                'Необходимо указать хотя бы один ингредиент для рецепта'
             )
             return self.form_invalid(form)
         instance.save()
@@ -145,7 +147,9 @@ class RecipeEditFormView(LoginRequiredMixin, UpdateView):
         if obj.author != self.request.user:
             raise Http404('Вы не являетесь автором данного рецепта')
 
-        return super(RecipeEditFormView, self).dispatch(request, *args, **kwargs)
+        return super(RecipeEditFormView, self).dispatch(
+            request, *args, **kwargs
+        )
 
     def get_success_url(self):
         return reverse('recipe', kwargs={'pk': self.object.id})
@@ -186,8 +190,8 @@ def shoplist_download(request):
         title=F('amount__ingredient__name'),
         units=F('amount__ingredient__unit')
     ).values('title', 'units').order_by('title').annotate(
-        total=Sum('amount__units'
-    ))
+        total=Sum('amount__units')
+    )
     response = HttpResponse(content_type='text/text')
     response['Content-Disposition'] = 'attachment; filename="shoplist.txt"'
 

@@ -15,7 +15,7 @@ def create_ingredients_amounts(instance, form_data):
     ]
     ingredients_amounts = [
         Amount(
-            ingredient = get_object_or_404(Ingredient, name=ingredient),
+            ingredient=get_object_or_404(Ingredient, name=ingredient),
             units=int(unit),
             recipe=instance
         )
