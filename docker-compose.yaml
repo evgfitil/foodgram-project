@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db:
+    container_name: foodgram-db1
+    image: postgres:12.4-alpine
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - .db.env
+
+volumes:
+  psql_data:
