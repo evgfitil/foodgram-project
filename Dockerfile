@@ -9,7 +9,7 @@ ENV PYTHONBUFFERED 1
 
 RUN apk update \
     && apk add --virtual build-deps gcc python3-dev musl-dev \
-    && apk add jpeg-dev zlib-dev libjpeg \
+    && apk add jpeg-dev zlib-dev libjpeg  postgresql-dev \
     && pip install Pillow \
     && apk del build-deps
 
