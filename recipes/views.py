@@ -4,11 +4,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F, Sum
 from django.http import Http404, HttpResponse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, View
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, render
 
 from api.models import Follow
 
-from .extras import create_ingredients_amounts, get_all_tags
+from .extras import create_ingredients_amounts, get_all_tags, get_filters
 from .forms import RecipeForm
 from .models import Recipe, ShopList, User
 
@@ -22,11 +22,7 @@ class RecipeIndexListView(ListView):
     def get_queryset(self):
         qs = super().get_queryset()
 
-        if 'filters' in self.request.GET:
-            filters = self.request.GET.getlist('filters')
-            qs = qs.filter(tag__slug__in=filters).distinct()
-
-        return qs.order_by('-pub_date')
+        return get_filters(self.request, qs)
 
     def get_user_favorites(self):
         user = self.request.user
@@ -64,24 +60,18 @@ class RecipeDetailView(DetailView):
 
 class AuthorRecipeListView(RecipeIndexListView):
 
-    model = Recipe
     template_name = 'author.html'
-    paginate_by = 6
 
     def get_queryset(self):
         cur_user = User.objects.get(id=self.kwargs['pk'])
         qs = Recipe.objects.filter(author=cur_user)
 
-        if 'filters' in self.request.GET:
-            filters = self.request.GET.getlist('filters')
-            qs = qs.filter(tag__slug__in=filters).distinct()
-
-        return qs.order_by('-pub_date')
+        return get_filters(self.request, qs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         author = User.objects.get(id=self.kwargs['pk'])
-        context['username'] = author
+        context['author'] = author
         if self.request.user.is_authenticated:
             fav_authors = Follow.objects.filter(
                 user=self.request.user
@@ -95,19 +85,13 @@ class AuthorRecipeListView(RecipeIndexListView):
 
 class FavoriteListView(LoginRequiredMixin, RecipeIndexListView):
 
-    model = Recipe
     template_name = 'favorite.html'
-    paginate_by = 6
 
     def get_queryset(self):
         author = self.request.user
         qs = Recipe.objects.filter(favrecipe__user=author).all()
 
-        if 'filters' in self.request.GET:
-            filters = self.request.GET.getlist('filters')
-            qs = qs.filter(tag__slug__in=filters).distinct()
-
-        return qs.order_by('-pub_date')
+        return get_filters(self.request, qs)
 
 
 class MyFollowListView(LoginRequiredMixin, ListView):
