@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Обаут{% endblock %}
+{% block content %}
+{% load static %}
+{% include 'nav.html' %}
+<link rel="stylesheet" href="{% static 'pages/single.css' %}">
+  <div class="single-card" data-id="{{ recipe.id }}">
+    <div class="single-card__info">
+      <div class="single-card__header-info">
+        <h1 class="single-card__title">{{ headline }}</h1>
+      </div>
+      <div class="single-card__section">
+           <img src="{% static 'about.png' %}" alt="">
+      </div>
+    </div>
+  </div>
+{% endblock %}

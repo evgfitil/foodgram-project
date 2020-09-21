@@ -18,6 +18,7 @@ from django.urls import include, path
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -25,9 +26,14 @@ urlpatterns = [
     # register and auth
     path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
+    path('about/author/', TemplateView.as_view(
+        template_name='about.html'
+    ), name='about_author'),
+    path('about/tech/', TemplateView.as_view(
+        template_name='about.html'
+    ), name='about_tech'),
     path('api/', include('api.urls')),
     path('', include("recipes.urls")),
-
 ]
 
 if settings.DEBUG:
