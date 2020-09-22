@@ -31,13 +31,14 @@ RUN mkdir $APP_HOME/static
 RUN mkdir $APP_HOME/media
 WORKDIR $APP_HOME
 
-RUN apk update && apk add libpq
+RUN apk update && apk add libpq \
+    && set -ex && apk --no-cache add sudo
 COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN chown -R app:app $APP_HOME
 RUN chown -R app:app $HOME
-RUN pip install --upgrade pip
-RUN pip install --no-cache /wheels/*
+RUN sudo -H pip install --upgrade pip
+RUN sudo -H pip install --no-cache /wheels/*
 
 COPY . $APP_HOME
 RUN chown -R app:app $APP_HOME
