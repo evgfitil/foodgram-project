@@ -1,5 +1,4 @@
 # BUILDER
-
 FROM python:3.8-alpine as builder
 LABEL stage=builder
 
@@ -22,7 +21,6 @@ COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 # FINAL
-
 FROM python:3.8-alpine
 
 RUN mkdir -p /home/app
