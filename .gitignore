@@ -130,5 +130,4 @@ dmypy.json
 .DS_Store
 .db.env
 .idea/
-media/
 static/
