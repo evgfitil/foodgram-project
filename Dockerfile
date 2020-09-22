@@ -36,8 +36,8 @@ COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 RUN chown -R app:app $APP_HOME
 RUN chown -R app:app $HOME
-RUN sudo -H pip install --upgrade pip
-RUN sudo -H pip install --no-cache /wheels/*
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
 
 COPY . $APP_HOME
 RUN chown -R app:app $APP_HOME
