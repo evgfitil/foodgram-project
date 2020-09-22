@@ -1,8 +1,21 @@
 version: '3'
 
 services:
+  web:
+    container_name: foodgram-web
+    image: evgfitil/foodgram:latest
+    command: gunicorn foodgram.wsgi --bind 0:8000
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+    expose:
+      - 8000
+    env_file:
+      - .env
+    depends_on:
+      - db
   db:
-    container_name: foodgram-db1
+    container_name: foodgram-db
     image: postgres:12.4-alpine
     volumes:
       - psql_data:/var/lib/postgresql/data
@@ -10,6 +23,18 @@ services:
       - 5432:5432
     env_file:
       - .db.env
+  nginx:
+    container_name: foogram-nginx
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+    ports:
+      - 80:80
+    depends_on:
+      - web
 
 volumes:
   psql_data:
+  static_volume:
+  media_volume:
