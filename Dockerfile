@@ -11,8 +11,7 @@ RUN apk update \
     && apk add --virtual build-deps \
     && apk add gcc python3-dev musl-dev postgresql-dev \
     && apk add jpeg-dev zlib-dev libjpeg \
-    && pip install Pillow \
-    && apk del build-deps
+    && pip install Pillow
 
 RUN pip install --upgrade pip
 COPY . /usr/src/app/
