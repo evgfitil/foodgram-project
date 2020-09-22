@@ -20,6 +20,7 @@ foodgram-project
   и переименуйте их в `.env` и `.db.env`
   2. Для запуска проекта выполните команду: `make run` или `docker-compose up -d`
      После успешного запуска, проект доступен по адресу http://localhost:80
-  3. Для загрузки тестовых данных выполните команду: `make load_data` или `docker exec -ti foodgram-web ./manage.py loaddata dump.json`
-  4. Для получения актуальной версии образа проекта выполните: `make pull` или `docker pull evgfitil/foodgram`
+  3. При первом запуске необходимо применить миграции: `make migrate` или `docker exec -ti foodgram-web ./manage.py migrate`
+  4. Для загрузки тестовых данных выполните команду: `make load_data` или `docker exec -ti foodgram-web ./manage.py loaddata dump.json`
+  5. Для получения актуальной версии образа проекта выполните: `make pull` или `docker pull evgfitil/foodgram`
   
