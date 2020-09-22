@@ -40,6 +40,7 @@ RUN sudo -H pip install --upgrade pip \
     && sudo -H pip install --no-cache /wheels/*
 
 COPY . $APP_HOME
+COPY ./foodgram/.env $APP_HOME/foodgram/.env
 RUN chown -R app:app $APP_HOME
 
 USER app
