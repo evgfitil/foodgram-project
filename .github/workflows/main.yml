@@ -41,3 +41,19 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: evgfitil/foodgram
           tag_with_ref: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push_to_docker_hub
+    steps:
+      - name: executing remote ssh commands to deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd projects/foodgram-project/
+            sudo docker pull evgfitil/foodgram
+            sudo docker-compose down
+            sudo docker-compose up -d
