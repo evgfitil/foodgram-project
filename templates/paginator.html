@@ -1,8 +1,9 @@
+{% load recipes_extras %}
 {% if is_paginated %}
   <nav class="pagination" aria-label="Search results pages">
     <ul class="pagination__container">
       {% if page_obj.has_previous %}
-        <li class="pagination__item"><a class="pagination__link link" href="?page={{ page_obj.previous_page_number }}">
+        <li class="pagination__item"><a class="pagination__link link" href="?{% url_replace page=page_obj.previous_page_number %}">
           <span class="icon-left"></span></a>
         </li>
       {% endif %}
@@ -10,11 +11,11 @@
         {% if page_obj.number == p %}
           <li class="pagination__item pagination__item_active"><a class="pagination__link link" href="?page={{ p }}">{{ p }}</a></li>
         {% else %}
-          <li class="pagination__item"><a class="pagination__link link" href="?page={{ p }}">{{ p }}</a></li>
+          <li class="pagination__item"><a class="pagination__link link" href="?{% url_replace page=p %}">{{ p }}</a></li>
         {% endif %}
       {% endfor %}
       {% if page_obj.has_next %}
-        <li class="pagination__item"><a class="pagination__link link" href="?page={{ page_obj.next_page_number }}"><span class="icon-right"></span></a></li>
+        <li class="pagination__item"><a class="pagination__link link" href="?{% url_replace page=page_obj.next_page_number %}"><span class="icon-right"></span></a></li>
       {% endif %}
     </ul>
   </nav>

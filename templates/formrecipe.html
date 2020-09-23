@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% block tilte %}Создание рецепта{% endblock %}
+{% block title %}Создание рецепта{% endblock %}
 {% block content %}
     {% load static recipes_extras %}
     {% include 'nav.html' with recipeform=True %}
     <link rel="stylesheet" href="{% static 'pages/form.css' %}">
-<main class="main container">
     <div class="main__header">
         <h1 class="main__title">Создание рецепта</h1>
     </div>
@@ -95,7 +94,6 @@
             </div>
         </form>
     </div>
-</main>
     <script src="{% static 'js/config/config.js' %}"></script>
     <script src="{% static 'js/components/Header.js' %}"></script>
     <script src="{% static 'js/utils/debouncing.js' %}"></script>

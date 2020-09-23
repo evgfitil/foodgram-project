@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}{{ username.get_full_name }}{% endblock %}
+{% block title %}{{ author.get_full_name }}{% endblock %}
 {% block content %}
 {% load static recipes_extras %}
 {% include 'nav.html' with index=True %}
 {% csrf_token %}
 <link rel="stylesheet" href="{% static 'pages/index.css' %}">
-<main class="main container">
   <div class="main__header">
     <h1 class="main__title">{{ author.get_full_name }}</h1>
       {% include 'tags_filter.html' %}
@@ -64,5 +63,4 @@
     <script src="{% static 'js/components/Header.js' %}"></script>
     <script src="{% static 'js/api/Api.js' %}"></script>
     <script src="{% static 'authorRecipe.js' %}"></script>
-</main>
 {% endblock %}
