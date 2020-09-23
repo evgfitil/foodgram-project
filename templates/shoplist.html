@@ -21,7 +21,9 @@
         </li>
       {% endfor %}
       </ul>
+      {% if object_list %}
       <a class="button button_style_light-blue" href="{% url 'shoplist_download' %}">Скачать список</a>
+      {% endif %}
     </div>
   <script src="{% static 'js/config/config.js' %}"></script>
   <script src="{% static 'js/components/Header.js' %}"></script>
