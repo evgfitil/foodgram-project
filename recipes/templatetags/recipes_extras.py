@@ -25,10 +25,10 @@ def get_filter_link(request, tag):
     return new_request.urlencode()
 
 
-@register.simple_tag(takes_context=True)
-def url_replace(context, **kwargs):
-    query = context['request'].GET.copy()
-    query.update(kwargs)
+@register.simple_tag()
+def url_replace(request, page, new_page):
+    query = request.GET.copy()
+    query[page] = new_page
     return query.urlencode()
 
 
