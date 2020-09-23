@@ -33,7 +33,6 @@ services:
       - 80:80
     depends_on:
       - web
-
 volumes:
   psql_data:
   static_volume:
