@@ -56,4 +56,4 @@ jobs:
           script: |
             cd projects/foodgram-project/
             sudo docker pull evgfitil/foodgram
-            sudo docker-compose restart foodgram-web
+            sudo docker-compose restart web
