@@ -10,8 +10,9 @@
     <h1 class="main__title">{{ author.get_full_name }}</h1>
       {% include 'tags_filter.html' %}
   </div>
-  {% if request.user.is_authenticated and request.user != author %}
-    <div class="author-subscribe" data-author="{{ username.id }}">
+  {% if request.user.is_authenticated %}
+  {% if request.user != author %}
+    <div class="author-subscribe" data-author="{{ author.id }}">
     {% if author|is_following:request.user %}
       <p style="padding: 0 0 2em 0;">
         <button class="button button_style_light-blue button_size_auto" name="subscribe" >Отписаться от автора</button></p>
@@ -20,6 +21,7 @@
         <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button></p>
     {% endif %}
     </div>
+  {% endif %}
   {% endif %}
   <div class="card-list">
   {% for recipe in object_list %}

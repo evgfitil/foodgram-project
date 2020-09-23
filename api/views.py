@@ -38,7 +38,6 @@ class SubscribeView(View):
     def post(self, request):
         author_id = json.loads(request.body).get('id')
         author = get_object_or_404(User, id=author_id)
-
         if request.user == author:
             return JsonResponse({'success': False})
 
