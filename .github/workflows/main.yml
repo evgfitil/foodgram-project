@@ -56,4 +56,4 @@ jobs:
           script: |
             cd projects/foodgram-project/
             sudo docker pull evgfitil/foodgram
-            docker-compose up -d --no-deps web
+            sudo docker-compose up -d --no-deps web
