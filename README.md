@@ -1,5 +1,5 @@
 # foodgram-project
-foodgram-project
+
 ![example workflow name](https://github.com/evgfitil/foodgram-project/workflows/Foodgram-CI/badge.svg)
 
 ***Foodgram*** - сайт рецептов - продуктовый помощник, позволяющий просматривать и создавать рецепты, 
