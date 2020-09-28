@@ -5,6 +5,8 @@ services:
     container_name: foodgram-web
     image: evgfitil/foodgram:latest
     command: gunicorn foodgram.wsgi --bind 0:8000
+    networks:
+      - foodgram
     volumes:
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
@@ -17,6 +19,8 @@ services:
   db:
     container_name: foodgram-db
     image: postgres:12.4-alpine
+    networks:
+      - foodgram
     volumes:
       - psql_data:/var/lib/postgresql/data
     expose:
@@ -26,14 +30,29 @@ services:
   nginx:
     container_name: foodgram-nginx
     build: ./nginx
+    networks:
+      - foodgram
+      - traefik
     volumes:
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
-    ports:
-      - 80:80
-      - 443:443
+    expose:
+      - 80
+      - 443
     depends_on:
       - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx.rule=Host(`foodgram.ea-praktikum.ml`)"
+      - "traefik.http.routers.nginx.entrypoints=websecure"
+      - "traefik.http.routers.nginx.tls.certresolver=myresolver"
+      - "traefik.docker.network=traefik"
+networks:
+  traefik:
+    external:
+      name: traefik
+  foodgram:
+    external: false
 volumes:
   psql_data:
   static_volume:
